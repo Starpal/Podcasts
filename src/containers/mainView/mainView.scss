@@ -2,4 +2,9 @@
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
+	margin: 0 5rem;
+
+	.podcast_link {
+		text-decoration: none;
+	}
 }
