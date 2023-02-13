@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import { getPodcasts } from "./utils/api";
 import MainView from "./containers/mainView/mainView";
 import PodcastDetails from "./containers/podcastDetails/podcastDetails";
+import { LoadingProvider } from "./LoadingContext";
 
 const App = () => {
 
@@ -16,15 +17,16 @@ const App = () => {
 
 	return (
 		<BrowserRouter>
-			{/* Indicador de Loading que sparisce una volta caricati i risultati */}
-			<NavLink to="/" className="nav-link">
-				Podcaster
-			</NavLink>
-			<div className="divider"/>
-			<Routes>
-				<Route path="/" element={<MainView />} />
-				<Route path="/podcast/:id" element={<PodcastDetails/>} />
-			</Routes>
+			<LoadingProvider>
+				<NavLink to="/" className="nav-link">
+					Podcaster
+				</NavLink>
+				<div className="divider" />
+				<Routes>
+					<Route path="/" element={<MainView />} />
+					<Route path="/podcast/:id" element={<PodcastDetails />} />
+				</Routes>
+			</LoadingProvider>
 		</BrowserRouter>
 	)
 };

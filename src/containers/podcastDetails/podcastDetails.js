@@ -3,14 +3,17 @@ import { useParams, useLocation } from 'react-router-dom';
 import { getPodcast, fetchStatusUrl } from "../../utils/api";
 import "./podcastDetails.scss";
 import axios from "axios";
-import XMLParser from 'react-xml-parser';
+import XMLParser from "react-xml-parser";
+import { useLoading } from "../../LoadingContext";
+import LoadingComponent from "../../components/loading/loading";
 
 const podcastDetails = () => {
 	const [episodes, setEpisodes] = useState();
+	const { loading, setLoading } = useLoading();
 
 	const { id } = useParams();
-	const location = useLocation()
-	const { image, name, author, description } = location.state
+	const location = useLocation();
+	const { image, name, author, description } = location.state;
 
 	useEffect(() => {
 		getPodcast(id)
@@ -31,12 +34,14 @@ const podcastDetails = () => {
 					const xmlChildrenArray = xml.children[0].children;
 					const podcastEpisodes = xmlChildrenArray.filter((child) => child.name === "item");
 					setEpisodes(podcastEpisodes);
+					setLoading(false);
 				} else {
 					fetchStatusUrl(data.status.url).then((response) => {
 						let xml = new XMLParser().parseFromString(response.data);
 						const xmlChildrenArray = xml.children;
 						const podcastEpisodes = xmlChildrenArray.filter((child) => child.name === "item");
 						setEpisodes(podcastEpisodes);
+						setLoading(false);
 					})
 				}
 			})
@@ -59,6 +64,7 @@ const podcastDetails = () => {
 	return (
 		<>
 			<div className="podcast_container">
+				{loading && <LoadingComponent/>}
 				<div className="podcast_sidebar">
 					<div className="image_container">
 						<img className="image" src={image} alt="podcast_image" />

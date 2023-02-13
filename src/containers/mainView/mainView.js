@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import PodcastCard from "../../components/podcastCard";
+import PodcastCard from "../../components/podcastCard/podcastCard";
 import "./mainView.scss";
+import { useLoading } from "../../LoadingContext";
+import LoadingComponent from "../../components/loading/loading";
 
 const MainView = () => {
 
@@ -12,6 +14,8 @@ const MainView = () => {
 		if (localData !== null) return JSON.parse(localData);
 		return [];
 	});
+	const [search, setSearch] = useState("");
+	const { loading, setLoading } = useLoading();
 
 	useEffect(() => {
 		if (localData && timestamp) {
@@ -19,35 +23,51 @@ const MainView = () => {
 
 			if (elapsedTime < 24 * 60 * 60 * 1000) {
 				setPodcastList(JSON.parse(localData));
+				setLoading(true);
 				return;
 			} else {
-				localStorage.removeItem("data");
+				localStorage.removeItem("Podcasts");
 				localStorage.removeItem("timestamp");
 			}
 		}
 	}, [])
 
-	//console.log('podcastList', podcastList)
+	const handleSearch = (event) => {
+		const value = event.target.value;
+		setSearch(value);
+	};
+
+	const searchValue = search.toLowerCase();
+
 	return (
 		<div>
-			{podcastList.length} {/* Filter dei podcast */}
+			{!loading && <LoadingComponent />}
+			<div className="search_section">
+				<span className="podcast_length">{podcastList.length}</span>
+				<input type="text" onChange={handleSearch} value={search} placeholder="Filter podcasts..." />
+			</div>
 			<div className="podcastList_container">
 				{podcastList.map((podcast, index) => {
+					const image = podcast["im:image"][2].label
+					const name = podcast["im:name"].label;
+					const author = podcast["im:artist"].label
 					return (
 						<div key={index}>
 							<Link
 								to={`/podcast/${podcast.id.attributes["im:id"]}`}
 								className="podcast_link"
 								state={{
-									image: podcast["im:image"][2].label,
-									name: podcast["im:name"].label,
-									author: podcast["im:artist"].label,
-									description: podcast.summary.label
+									image: image,
+									name: name,
+									author: author,
+									description: podcast.summary.label,
 								}}>
-								<PodcastCard
-									image={podcast["im:image"][2].label}
-									name={podcast["im:name"].label}
-									author={podcast["im:artist"].label} />
+								{(name.toLowerCase().includes(searchValue) || author.toLowerCase().includes(searchValue)) &&
+									<PodcastCard
+										image={image}
+										name={name}
+										author={author} />
+								}
 							</Link>
 						</div>
 					)
