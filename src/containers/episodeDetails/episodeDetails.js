@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom';
 import "./episodeDetails.scss";
 import parse from 'html-react-parser';
 
-
 const episodeDetails = () => {
 
 	const location = useLocation();
