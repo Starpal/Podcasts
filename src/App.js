@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
 import { getPodcasts } from "./utils/api";
 import MainView from "./containers/mainView/mainView";
 import PodcastDetails from "./containers/podcastDetails/podcastDetails";
+import EpisodeDetails from "./containers/episodeDetails/episodeDetails";
 import { LoadingProvider } from "./LoadingContext";
 
 const App = () => {
@@ -25,6 +26,7 @@ const App = () => {
 				<Routes>
 					<Route path="/" element={<MainView />} />
 					<Route path="/podcast/:id" element={<PodcastDetails />} />
+					<Route path="/podcast/:id/episode/:id" element={<EpisodeDetails />} />
 				</Routes>
 			</LoadingProvider>
 		</BrowserRouter>

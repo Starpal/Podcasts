@@ -48,15 +48,17 @@ const MainView = () => {
 			</div>
 			<div className="podcastList_container">
 				{podcastList.map((podcast, index) => {
-					const image = podcast["im:image"][2].label
+					const id = podcast.id.attributes["im:id"];
+					const image = podcast["im:image"][2].label;
 					const name = podcast["im:name"].label;
-					const author = podcast["im:artist"].label
+					const author = podcast["im:artist"].label;
 					return (
 						<div key={index}>
 							<Link
-								to={`/podcast/${podcast.id.attributes["im:id"]}`}
+								to={`/podcast/${id}`}
 								className="podcast_link"
 								state={{
+									podcastId: id,
 									image: image,
 									name: name,
 									author: author,

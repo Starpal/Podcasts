@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import { getPodcast, fetchStatusUrl } from "../../utils/api";
 import "./podcastDetails.scss";
 import axios from "axios";
@@ -13,7 +13,7 @@ const podcastDetails = () => {
 
 	const { id } = useParams();
 	const location = useLocation();
-	const { image, name, author, description } = location.state;
+	const { podcastId, image, name, author, description } = location.state;
 
 	useEffect(() => {
 		getPodcast(id)
@@ -64,14 +64,18 @@ const podcastDetails = () => {
 	return (
 		<>
 			<div className="podcast_container">
-				{loading && <LoadingComponent/>}
+				{loading && <LoadingComponent />}
 				<div className="podcast_sidebar">
-					<div className="image_container">
-						<img className="image" src={image} alt="podcast_image" />
-					</div>
+					<Link to={".."} style={{ textDecoration: 'none' }}>
+						<div className="image_container">
+							<img className="image" src={image} alt="podcast_image" />
+						</div>
+						<div className="podcast_info">
+							<p className="podcastName bold">{name}</p>
+							<p className="podcastby"><i>by {author}</i></p>
+						</div>
+					</Link>
 					<div className="podcast_info">
-						<p className="podcastName bold">{name}</p>
-						<p className="podcastby"><i>by {author}</i></p>
 						<div>
 							<p className="podcastDescription bold">Description</p>
 							<p className="podcastDescription"><i>{description}</i></p>
@@ -92,14 +96,31 @@ const podcastDetails = () => {
 						<div className="divider" />
 						<div className="episodesRows">
 							{episodes && episodes.map((episode, index) => {
+								const audio = [];
+								const episodeDescription = [];
 								return (
-									<div className="episodesTable_row" key={index}>
-										{episode.children.map(episodeChild => {
+									<div className="episodesTable_row" >
+										{episode.children.map((episodeChild, id) => {
+											episodeChild.name === "media:content" && audio.push(episodeChild.attributes.url)
+											episodeChild.name === "content:encoded" && episodeDescription.push(episodeChild.value)
 											return (
 												episodeChild.name === "title" ?
-													<div>
-														<p className="episodeTitle">{episodeChild.value}</p>
-													</div>
+													<Link
+														to={`/podcast/${podcastId}/episode/${id}`}
+														className="episode_link"
+														state={{
+															image: image,
+															name: name,
+															author: author,
+															podcastDescription: description,
+															title: episodeChild.value,
+															description: episodeDescription,
+															audio: audio
+														}}>
+														<div key={id}>
+															<p className="episodeTitle">{episodeChild.value}</p>
+														</div>
+													</Link>
 													: episodeChild.name === "pubDate" ?
 														<div>
 															<p className="episodeDate">{new Date(episodeChild.value).toLocaleDateString()}</p>
@@ -111,9 +132,7 @@ const podcastDetails = () => {
 															: null
 											)
 										})}
-									</div>
-
-								);
+									</div>)
 							})}
 						</div>
 					</div>
