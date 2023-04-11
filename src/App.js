@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
+import { HashRouter, Routes, Route, NavLink } from "react-router-dom";
 import { getPodcasts } from "./utils/api";
 import MainView from "./containers/mainView/mainView";
 import PodcastDetails from "./containers/podcastDetails/podcastDetails";
@@ -17,7 +17,7 @@ const App = () => {
 	}, []);
 
 	return (
-		<BrowserRouter>
+		<HashRouter>
 			<LoadingProvider>
 				<NavLink to="/" className="nav-link">
 					Podcaster
@@ -29,7 +29,7 @@ const App = () => {
 					<Route path="/podcast/:id/episode/:id" element={<EpisodeDetails />} />
 				</Routes>
 			</LoadingProvider>
-		</BrowserRouter>
+		</HashRouter>
 	)
 };
 

@@ -10,16 +10,15 @@ const episodeDetails = () => {
 
 	const renderDescription = (desc) => {
 		let episodeDescription;
+		// We check if the description value is an html 
 		if (/<(?=.*? .*?\/ ?>|br|hr|input|!--|wbr)[a-z]+.*?>|<([a-z]+).*?<\/\1>/i.test(desc)) {
-			console.log('containsHTML')
-			const parsedDesc = parse(description[0]);
+			const parsedDescription = parse(description[0]);
 
-			if (parsedDesc.includes(" >")) {
-				parsedDesc.splice(-1, 1);
+			if (parsedDescription.includes(" >")) {
+				parsedDescription.splice(-1, 1);
 			}
-			episodeDescription = parsedDesc;
+			episodeDescription = parsedDescription;
 		} else {
-			console.log('no')
 			episodeDescription = description
 		}
 		return episodeDescription;
@@ -29,7 +28,7 @@ const episodeDetails = () => {
 		<>
 			<div className="episode_container">
 				<div className="podcast_sidebar">
-					<Link to={".."} style={{textDecoration: 'none'}}>
+					<Link to={".."} style={{ textDecoration: 'none' }}>
 						<div className="image_container">
 							<img className="image" src={image} alt="podcast_image" />
 						</div>
@@ -45,11 +44,9 @@ const episodeDetails = () => {
 						</div>
 					</div>
 				</div>
-
 				<div className="episode_detail">
 					<h2>{title}</h2>
 					<div className="episodeDescription"><i>{renderDescription(description)}</i></div>
-
 					<audio
 						controls
 						src={audio}>

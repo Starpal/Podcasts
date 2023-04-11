@@ -20,7 +20,6 @@ const MainView = () => {
 	useEffect(() => {
 		if (localData && timestamp) {
 			const elapsedTime = Date.now() - timestamp;
-
 			if (elapsedTime < 24 * 60 * 60 * 1000) {
 				setPodcastList(JSON.parse(localData));
 				setLoading(true);
@@ -30,7 +29,7 @@ const MainView = () => {
 				localStorage.removeItem("timestamp");
 			}
 		}
-	}, [])
+	}, [localData]);
 
 	const handleSearch = (event) => {
 		const value = event.target.value;
@@ -54,28 +53,27 @@ const MainView = () => {
 					const author = podcast["im:artist"].label;
 					return (
 						<div key={index}>
-							<Link
-								to={`/podcast/${id}`}
-								className="podcast_link"
-								state={{
-									podcastId: id,
-									image: image,
-									name: name,
-									author: author,
-									description: podcast.summary.label,
-								}}>
-								{(name.toLowerCase().includes(searchValue) || author.toLowerCase().includes(searchValue)) &&
+							{(name.toLowerCase().includes(searchValue) || author.toLowerCase().includes(searchValue)) &&
+								<Link
+									to={`/podcast/${id}`}
+									className="podcast_link"
+									state={{
+										podcastId: id,
+										image: image,
+										name: name,
+										author: author,
+										description: podcast.summary.label,
+									}}>
 									<PodcastCard
 										image={image}
 										name={name}
 										author={author} />
-								}
-							</Link>
+								</Link>
+							}
 						</div>
 					)
 				})}
 			</div>
-
 		</div>
 	)
 };

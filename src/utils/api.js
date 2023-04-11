@@ -20,8 +20,9 @@ export const getPodcasts = async () => {
 }
 
 export const getPodcast = async (id) => {
+	const url = `https://api.allorigins.win/get?url=${encodeURIComponent(`https://itunes.apple.com/lookup?id=${id}`)}`
 	try {
-		const response = await axios.get(`https://api.allorigins.win/get?url=${encodeURIComponent(`https://itunes.apple.com/lookup?id=${id}`)}`);
+		const response = await axios.get(url, { 'Access-Control-Allow-Origin': 'http://localhost:8080' });
 		return response;
 
 	} catch (error) {
@@ -39,10 +40,8 @@ export const getPodcast = async (id) => {
 }
 
 export const fetchStatusUrl = async (url) => {
-	//console.log('entra', url)
 	try {
 		const response = await axios.get(url)
-		//console.log('response', response)
 		return response;
 
 	} catch (error) {
